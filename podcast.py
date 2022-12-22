@@ -70,11 +70,20 @@ class Recorder:
         fileExists = True
         i = 0
         while fileExists:
-            if os.path.exists(f"Podcast Recording At {datetime.datetime.now().year}.{datetime.datetime.now().month}.{datetime.datetime.now().day} ({i}).wav"):
-                i += 1
+            if i == 0:
+                if os.path.exists(f"Podcast Recording At {datetime.datetime.now().year}.{datetime.datetime.now().month}.{datetime.datetime.now().day} ({i}).wav"):
+                    i += 1
+                else:
+                    fileExists = False
             else:
-                fileExists = False
-        recording = wave.open(f"Podcast Recording At {datetime.datetime.now().year}.{datetime.datetime.now().month}.{datetime.datetime.now().day} ({i}).wav", "wb")
+                if os.path.exists(f"Podcast Recording At {datetime.datetime.now().year}.{datetime.datetime.now().month}.{datetime.datetime.now().day}.wav"):
+                    i += 1
+                else:
+                    fileExists = False
+        if (i-1) > 1:
+            recording = wave.open(f"Podcast Recording At {datetime.datetime.now().year}.{datetime.datetime.now().month}.{datetime.datetime.now().day} ({i}).wav", "wb")
+        else:
+            recording = wave.open(f"Podcast Recording At {datetime.datetime.now().year}.{datetime.datetime.now().month}.{datetime.datetime.now().day}.wav", "wb")
         recording.setnchannels(2)
         recording.setsampwidth(audio.get_sample_size(pyaudio.paInt16))
         recording.setframerate(44100)
